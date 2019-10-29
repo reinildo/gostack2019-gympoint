@@ -1,12 +1,12 @@
 import * as yup from 'yup';
-import Students from '../models/Students';
+import Student from '../models/Student';
 
-class StudentsController {
+class StudentController {
   /**
    * index
    */
   async index(req, res) {
-    const students = await Students.findAll();
+    const students = await Student.findAll();
 
     return res.json(students);
   }
@@ -30,7 +30,13 @@ class StudentsController {
       return res.status(400).json({ error: 'Validation fails' });
     }
 
-    const student = await Students.create(req.body);
+    const studentExists = await Student.findOne({ email: req.body.email });
+
+    if (studentExists) {
+      return res.status(400).json({ error: 'Student already exist' });
+    }
+
+    const student = await Student.create(req.body);
 
     return res.json({ student });
   }
@@ -51,11 +57,11 @@ class StudentsController {
       return res.status(400).json({ error: 'Validation fails' });
     }
 
-    const student = await Students.findByPk(req.params.id);
+    const student = await Student.findByPk(req.params.id);
     const { email } = req.body;
 
     if (student.email !== email) {
-      const studentExists = await Students.findOne({ where: { email } });
+      const studentExists = await Student.findOne({ where: { email } });
       if (studentExists) {
         return res.status(400).json({ error: 'Student already exists.' });
       }
@@ -67,4 +73,4 @@ class StudentsController {
   }
 }
 
-export default new StudentsController();
+export default new StudentController();

@@ -1,7 +1,7 @@
 import Sequelize, { Model } from 'sequelize';
 import { differenceInCalendarDays } from 'date-fns';
 
-class Students extends Model {
+class Student extends Model {
   static init(sequelize) {
     super.init(
       {
@@ -31,4 +31,4 @@ class Students extends Model {
   }
 }
 
-export default Students;
+export default Student;
