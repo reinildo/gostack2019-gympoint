@@ -5,10 +5,11 @@ import Student from '../app/models/Student';
 import Registration from '../app/models/Registration';
 import Plan from '../app/models/Plan';
 import Checkin from '../app/models/Checkin';
+import Help from '../app/models/Help';
 
 import databaseConfig from '../config/database';
 
-const models = [User, Student, Plan, Registration, Checkin];
+const models = [User, Student, Plan, Registration, Checkin, Help];
 
 class Database {
   constructor() {
