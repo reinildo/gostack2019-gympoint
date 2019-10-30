@@ -60,10 +60,12 @@ class StudentController {
     const student = await Student.findByPk(req.params.id);
     const { email } = req.body;
 
-    if (student.email !== email) {
-      const studentExists = await Student.findOne({ where: { email } });
-      if (studentExists) {
-        return res.status(400).json({ error: 'Student already exists.' });
+    if (email) {
+      if (student.email !== email) {
+        const studentExists = await Student.findOne({ where: { email } });
+        if (studentExists) {
+          return res.status(400).json({ error: 'Student already exists.' });
+        }
       }
     }
 

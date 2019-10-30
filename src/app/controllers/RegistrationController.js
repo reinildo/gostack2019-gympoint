@@ -4,6 +4,8 @@ import { addMonths, parseISO } from 'date-fns';
 import Registration from '../models/Registration';
 import Plan from '../models/Plan';
 import Student from '../models/Student';
+import Queue from '../../lib/Queue';
+import RegistrationMail from '../jobs/RegistrationMail';
 
 class RegistrationController {
   async index(req, res) {
@@ -41,17 +43,16 @@ class RegistrationController {
     /**
      * check if student exists
      */
-    const studentExists = await Student.findByPk(student_id);
-    if (!studentExists) {
+    const student = await Student.findByPk(student_id);
+    if (!student) {
       return res.status(404).json({ error: 'Student not found' });
     }
 
-    const plan = await Plan.findByPk(plan_id);
     /**
      * check if plan exists
      */
-    const planExists = await Student.findByPk(student_id);
-    if (!planExists) {
+    const plan = await Plan.findByPk(plan_id);
+    if (!plan) {
       return res.status(404).json({ error: 'Plan not found' });
     }
 
@@ -65,6 +66,8 @@ class RegistrationController {
       start_date: parseISO(start_date),
       end_date,
     });
+
+    await Queue.add(RegistrationMail.key, { registration, student, plan });
 
     return res.json(registration);
   }
